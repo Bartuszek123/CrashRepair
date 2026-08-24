@@ -6,23 +6,19 @@ Get it on [Paradox Mods](https://mods.paradoxplaza.com/mods/156593/Windows).
 
 ## The problem
 
-You unsubscribe from a few mods or asset packs, your city still **seems to** work fine,
-nothing happens for an hour, maybe more... and then the game crashes to desktop. No error,
-no nothing, and you feel like you just wasted hundreds of hours on a city just for it to
-get corrupted :( .
+It probably looks like this: you unsubscribe from a few mods or asset packs, your city still seems to work fine, nothing happens for an hour, maybe more... and then the game crashes to desktop (not very good). No error, no nothing, and YOU feel like you just wasted HUNDREDS of hours on a city just for it to get corrupted :( .
 
-The reason? Every object that removed content ever placed in your city — cars, props,
-surfaces, road markings — is still sitting in the save, pointing at something that no
-longer exists. Sooner or later the simulation touches one of those broken leftovers and
-the game goes down. That's exactly what happened to my own city, and it's why I made
-this mod.
+The reason? every object that removed content ever placed in your city — cars, props, surfaces, road markings — is still sitting in the save, pointing at something that no longer exists (because you uninstalled the mod). Sooner or later the simulation touches one of those broken leftovers and the game goes down (very bad).
 
-## How to fix your save
+It's exactly what happened to my city, and it's why I made this mod. If your save loads but keeps crashing after you changed your playset, there is a good chance it can be repaired with this mod (yippe!! your save is not gone forever :)).
 
-1. Load the affected city. The mod scans it automatically and shows what it found in the
-   mod's options (nothing is deleted yet).
-2. Press the **"Repair now"** button and confirm.
+How to fix your save
+
+1. Load the affected city. The mod scans it automatically and shows what it found in the mod's options (nothing is deleted yet, just showing what it found for now).
+2. Press "Repair now" button (also in the mod's options) and confirm.
 3. Save the city **under a new name** and keep the original file as a backup.
+
+That's it. My city that kept crashing within an hour ran for hours afterwards without a single problem (yippe its fixed now).
 
 There is also a **"Repair automatically on load"** toggle (off by default) — with it on,
 you can safely remove mods and assets without worrying about your save getting corrupted.
@@ -42,15 +38,15 @@ following hold:
   in the `PrefabSystem` registry.
 
 Broken instances are deleted through the game's regular bulldoze pipeline (the `Deleted`
-tag), so all owner-side references — road sub-lane buffers, household vehicle lists,
-building sub-areas, notification icons — are cleaned up by the same vanilla systems that
+tag), so all owner-side references (road sub-lane buffers, household vehicle lists,
+building sub-areas, notification icons) are cleaned up by the same vanilla systems that
 handle bulldozing. Runtime entities whose references the game repairs through other
-channels — `NetCompositionData`, `EffectInstance`, `LivePath` — are excluded from the
+channels (`NetCompositionData`, `EffectInstance`, `LivePath`) are excluded from the
 scan, mirroring the game's own `PrimaryPrefabReferencesSystem`.
 
 ## Removal
 
-The mod itself is safe to remove at any time — it doesn't add any data to your save
+The mod itself is safe to remove at any time because it doesn't add any data to your save
 files. Repairs you already saved stay, of course.
 
 ## Tips
