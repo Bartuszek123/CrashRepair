@@ -30,7 +30,7 @@ you can safely remove mods and assets without worrying about your save getting c
 A detailed list of everything found is written to
 `ModsData/CrashRepair/missing_prefabs_report.csv` and `Logs/CrashRepair.log`.
 
-## How it works (the technical version)
+## How it works
 
 The game keeps an empty placeholder for every missing asset a save references
 (`ResolvePrefabsSystem` creates it: `PrefabData` disabled, negative index, registered as
