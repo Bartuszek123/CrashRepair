@@ -8,7 +8,7 @@ Get it on [Paradox Mods](https://mods.paradoxplaza.com/mods/156593/Windows).
 
 It probably looks like this: you unsubscribe from a few mods or asset packs, your city still seems to work fine, nothing happens for an hour, maybe more... and then the game crashes to desktop (not very good). No error, no nothing, and YOU feel like you just wasted HUNDREDS of hours on a city just for it to get corrupted :( .
 
-The reason? every object that removed content ever placed in your city — cars, props, surfaces, road markings — is still sitting in the save, pointing at something that no longer exists (because you uninstalled the mod). Sooner or later the simulation touches one of those broken leftovers and the game goes down (very bad).
+The reason? every object that removed content ever placed in your city (cars, props, surfaces, road markings) is still sitting in the save, pointing at something that no longer exists (because you uninstalled the mod). Sooner or later the simulation touches one of those broken leftovers and the game goes down (very bad).
 
 It's exactly what happened to my city, and it's why I made this mod. If your save loads but keeps crashing after you changed your playset, there is a good chance it can be repaired with this mod (yippe!! your save is not gone forever :)).
 
