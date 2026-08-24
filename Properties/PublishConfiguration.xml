@@ -1,0 +1,67 @@
+<Publish>
+	<!--Id must be set in order to update existed mod. it is not required for publishing mod for the first time-->
+	<ModId Value="156593" />
+	<!--Name of the mod to display to players-->
+	<DisplayName Value="Crash Repair" />
+	<!--Short description of the mod-->
+	<ShortDescription Value="Does your city crash since you removed some mods or assets? This mod repairs such corrupted saves — it deletes the broken leftovers of missing content, so your city runs stable again." />
+	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
+	<LongDescription>
+# Does your city crash ever since you made some changes to your playset?
+
+It probably looks like this: you unsubscribe from a few mods or asset packs, your city still **seems to** work fine, nothing happens for an hour, maybe more... and then the game crashes to desktop (not very good). No error, no nothing, and YOU feel like you just wasted HUNDREDS of hours on a city just for it to get corrupted :( .
+
+The reason? every object that removed content ever placed in your city — cars, props, surfaces, road markings — is still sitting in the save, pointing at something that no longer exists (because you uninstalled the mod). Sooner or later the simulation **touches** one of those broken leftovers and the game goes down (very bad).
+
+It's exactly what happened to my city, and it's why I made this mod. If your save loads but keeps crashing after you changed your playset, there is a good chance it can be repaired with this mod (yippe!! your save is not gone forever :)).
+
+# How to fix your save
+
+1. Load the affected city. The mod scans it automatically and shows what it found in the mod's options (nothing is deleted yet, just showing what it found for now).
+2. Press **"Repair now"** button (also in the mod's options) and confirm.
+3. Save the city **under a new name** and keep the original file as a backup.
+
+That's it. My city that kept crashing within an hour ran for hours afterwards without a single problem (yippe its fixed now).
+
+# Keep it clean automatically
+
+In the options there is also a **"Repair automatically on load"** toggle. (It's off by default so the first repair is always your own decision :) )
+**I recommend** turning it on, because with automatic mode, you can **safely remove mods and assets without worrying about your save getting corrupted!** (hopefully, it worked for me but i didnt try every single mod, so it's possible something can still happen)
+(Keep in mind that if you load a save that was made with another playset, the automatic repair can delete some objects you might want to keep, so if you want to be safe, disable automatic repair and resubscribe to the mods for missing assets you want to keep, and then reenable or just press the repair button)
+
+# Notes
+
+- **Removal of objects is permanent in the repaired save.** If you re-subscribe to the removed mod later, the deleted objects will NOT come back (the repaired save no longer contains them). If you plan on adding a mod back, keep the original save!
+- This mod will **not** fix saves that are already corrupted and crash on load. It only works for saves that load normally and crash later.
+- Your savegame file on disk is **never** touched. The repair happens in the loaded city and only becomes permanent when you save.
+- A detailed list of everything found (which missing asset, how many objects) is in `ModsData/CrashRepair/missing_prefabs_report.csv` and `Logs/CrashRepair.log`.
+
+# How it works
+
+The game keeps an empty placeholder for every missing asset a save references (most likely so that when you load a save with the wrong playset, it doesn't get fucked). Crash Repair finds all objects pointing at placeholders like that and deletes them through the game's regular bulldoze pipeline (so everything can clean up it's references properly). Only objects whose source content is **verifiably** missing are touched (runtime data the game manages itself (road compositions, effects, paths) is **explicitly** excluded from the scan).
+	</LongDescription>
+	<!--Thumbnail-->
+	<Thumbnail Value="Properties/Thumbnail.png" />
+	<!--Screenshot, can be set multiple times-->
+	<Screenshot Value="Properties/image1.png" />
+	<!--Tag, can be set multiple times-->
+	<Tag Value="Code Mod" />
+	<!--Link to the forum post where the mod can be discussed-->
+	<ForumLink Value="" />
+	<!--Version of the mod-->
+	<ModVersion Value="1.0.0" />
+	<!--Recommended version of the base game to use the mod-->
+	<GameVersion Value="1.6.*" />
+	<!--Dependency for the mod, can be set multiple times-->
+	<Dependency Id="" />
+	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
+	<ChangeLog>
+v1.0.0
+Initial release.
+	</ChangeLog>
+	<!--External link, can be set multiple times. supported types are "discord", "github", "youtube", "twitch", "x", "paypal", "patreon", "buymeacoffee", "kofi", "crowdin", "gitlab", "gofundme"-->
+	<ExternalLink Type="kofi" Url="https://ko-fi.com/bartuszek" />
+	<ExternalLink Type="github" Url="https://github.com/Bartuszek123/CrashRepair" />
+	<!--Supported values Public, Private, Unlisted-->
+	<AccessLevel Value="Public" />
+</Publish>

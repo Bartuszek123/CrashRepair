@@ -1,0 +1,8 @@
+bin/
+obj/
+Library/
+.vs/
+_research/
+*.user
+*.md
+!README.md
