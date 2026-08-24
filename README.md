@@ -12,7 +12,7 @@ The reason? every object that removed content ever placed in your city — cars,
 
 It's exactly what happened to my city, and it's why I made this mod. If your save loads but keeps crashing after you changed your playset, there is a good chance it can be repaired with this mod (yippe!! your save is not gone forever :)).
 
-How to fix your save
+## How to fix your save
 
 1. Load the affected city. The mod scans it automatically and shows what it found in the mod's options (nothing is deleted yet, just showing what it found for now).
 2. Press "Repair now" button (also in the mod's options) and confirm.
