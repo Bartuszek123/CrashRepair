@@ -6,3 +6,4 @@ _research/
 *.user
 *.md
 !README.md
+!ChangeLog.md

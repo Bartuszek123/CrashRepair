@@ -48,6 +48,15 @@ handle bulldozing. Runtime entities whose references the game repairs through ot
 channels — `NetCompositionData`, `EffectInstance`, `LivePath` — are excluded from the
 scan, mirroring the game's own `PrimaryPrefabReferencesSystem`.
 
+## Removal
+
+The mod itself is safe to remove at any time — it doesn't add any data to your save
+files. Repairs you already saved stay, of course.
+
+## Tips
+
+- Check out my other mod, [Realistic Vehicle Colors](https://mods.paradoxplaza.com/mods/143394/Windows) :)
+
 ## Building
 
 Standard CSII mod toolchain (`dotnet build`, auto-deploys to the local mods folder).
