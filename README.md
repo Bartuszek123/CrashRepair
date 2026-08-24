@@ -20,7 +20,7 @@ It's exactly what happened to my city, and it's why I made this mod. If your sav
 
 That's it. My city that kept crashing within an hour ran for hours afterwards without a single problem (yippe its fixed now).
 
-There is also a **"Repair automatically on load"** toggle (off by default) — with it on,
+There is also a **"Repair automatically on load"** toggle (off by default). With it on,
 you can safely remove mods and assets without worrying about your save getting corrupted.
 
 A detailed list of everything found is written to
