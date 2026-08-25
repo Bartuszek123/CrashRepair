@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using Colossal.PSI.Environment;
 using Game;
+using Game.City;
 using Game.Common;
+using Game.Modding;
 using Game.Prefabs;
 using Game.Tools;
 using Unity.Collections;
@@ -23,6 +25,9 @@ namespace CrashRepair
     /// Updated: Building/Edge + Updated makes RoadConnectionSystem re-evaluate
     /// road connections, which detaches buildings when it runs while the net
     /// search tree is still empty during loading.
+    /// Also prunes the save's "mods used" list (CityConfigurationSystem.usedMods):
+    /// vanilla only ever adds to it, so a removed mod stays listed forever and
+    /// the load menu keeps flagging the save as missing content.
     /// </summary>
     public abstract partial class RepairSystemBase : GameSystemBase
     {
@@ -33,12 +38,14 @@ namespace CrashRepair
         }
 
         private PrefabSystem m_PrefabSystem;
+        private CityConfigurationSystem m_CityConfigurationSystem;
         private EntityQuery m_PrefabRefQuery;
 
         protected override void OnCreate()
         {
             base.OnCreate();
             m_PrefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
+            m_CityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
             // Excludes mirror vanilla PrimaryPrefabReferencesSystem: composition,
             // effect-instance and live-path entities are runtime-derived state
             // whose prefab references the game repairs through other channels —
@@ -92,7 +99,8 @@ namespace CrashRepair
                         toDelete.Add(entities[i]);
                 }
 
-                Report(entities.Length, missing, deleteBroken && missing.Count > 0);
+                Mod.lastScanResult = Report(entities.Length, missing, deleteBroken && missing.Count > 0)
+                    + CleanModList(deleteBroken);
                 if (toDelete.Length > 0)
                     EntityManager.AddComponent<Deleted>(toDelete.AsArray());
             }
@@ -104,18 +112,44 @@ namespace CrashRepair
             }
         }
 
-        private void Report(int scanned, Dictionary<Entity, MissingGroup> missing, bool deleting)
+        /// <summary>
+        /// Finds entries of the save's mod list that no loaded mod matches and
+        /// removes them when repairing. Returns a status suffix for the UI.
+        /// </summary>
+        private string CleanModList(bool remove)
+        {
+            // An empty list can only mean the mod manager is not fully up (this
+            // mod itself is always in it) — never prune against that.
+            string[] enabled = ModManager.GetModsEnabled();
+            if (enabled == null || enabled.Length == 0)
+                return string.Empty;
+
+            var stale = m_CityConfigurationSystem.usedMods.Except(enabled).ToArray();
+            if (stale.Length == 0)
+                return string.Empty;
+
+            // Entries are assembly full names (with version), so every mod update
+            // leaves an outdated entry behind — most of these are old versions of
+            // mods that are still installed, not missing mods.
+            Mod.log.Warn($"Save's mod list has {stale.Length} stale entries ({(remove ? "removed" : "kept")}): {string.Join(" | ", stale)}");
+            if (remove)
+                m_CityConfigurationSystem.usedMods.ExceptWith(stale);
+            return remove
+                ? $" Removed {stale.Length} stale entries (missing or outdated mods) from the save's mod list."
+                : $" The save's mod list has {stale.Length} stale entries (missing or outdated mods).";
+        }
+
+        /// <summary>Logs the scan outcome, writes the CSV; returns the status line for the UI.</summary>
+        private string Report(int scanned, Dictionary<Entity, MissingGroup> missing, bool deleting)
         {
             if (missing.Count == 0)
             {
-                Mod.lastScanResult = $"{scanned:N0} objects checked — no broken objects found.";
                 Mod.log.Info($"Scan done: {scanned} instances checked, no missing prefabs. Save is clean.");
-                return;
+                return $"{scanned:N0} objects checked — no broken objects found.";
             }
 
             int total = missing.Values.Sum(g => g.m_Count);
             string action = deleting ? "deleted" : "found (not deleted)";
-            Mod.lastScanResult = $"{scanned:N0} objects checked — {total:N0} broken objects ({missing.Count} missing assets) {action}.";
             Mod.log.Warn($"Scan done: {scanned} instances checked, {total} instances reference {missing.Count} missing prefabs ({action}):");
 
             var csv = new StringBuilder();
@@ -140,6 +174,7 @@ namespace CrashRepair
             {
                 Mod.log.Warn($"Failed to write CSV report: {e.Message}");
             }
+            return $"{scanned:N0} objects checked — {total:N0} broken objects ({missing.Count} missing assets) {action}.";
         }
 
         private string DescribePrefab(Entity prefab)

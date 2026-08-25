@@ -21,10 +21,10 @@ namespace CrashRepair
                 { m_Setting.GetOptionGroupLocaleID(Setting.kRepairGroup), "Savegame repair" },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ScanStatus)), "Last scan result" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.ScanStatus)), "Every time a savegame is loaded, the mod scans it for objects that belong to mods or assets that are no longer installed. Such orphaned objects are a common cause of crashes. A detailed list is written to ModsData/CrashRepair/missing_prefabs_report.csv." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.ScanStatus)), "Every time a savegame is loaded, the mod scans it for objects that belong to mods or assets that are no longer installed. Such orphaned objects are a common cause of crashes. It also checks the list of mods stored in the savegame for stale entries — mods that no longer exist or old versions of mods you still have (the reason the load menu keeps showing a warning). A detailed list is written to ModsData/CrashRepair/missing_prefabs_report.csv." },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.RepairNow)), "Repair now" },
-                { m_Setting.GetOptionDescLocaleID(nameof(Setting.RepairNow)), "Deletes every object in the current city that references a missing mod or asset (removed cars, props, surfaces, road markings, …). Afterwards, save your city under a NEW name and keep the original file as a backup. Note: the deleted objects will not come back if you re-subscribe the missing mod later." },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.RepairNow)), "Deletes every object in the current city that references a missing mod or asset (removed cars, props, surfaces, road markings, …) and removes stale entries (missing mods and old versions of mods) from the list stored in the savegame, so the load menu stops warning about them. Afterwards, save your city under a NEW name and keep the original file as a backup. Note: the deleted objects will not come back if you re-subscribe the missing mod later." },
                 { m_Setting.GetOptionWarningLocaleID(nameof(Setting.RepairNow)), "This permanently deletes all objects whose source mod or asset is missing — they will not come back even if you re-subscribe that mod later. Keep your original savegame as a backup and save the repaired city under a new name. Continue?" },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AutoRepairOnLoad)), "Repair automatically on load" },

@@ -23,6 +23,10 @@ That's it. My city that kept crashing within an hour ran for hours afterwards wi
 There is also a **"Repair automatically on load"** toggle (off by default). With it on,
 you can safely remove mods and assets without worrying about your save getting corrupted.
 
+The repair also cleans the list of mods stored in the save — missing mods and old versions
+of mods you still have (the game never removes those) — so the load menu stops showing the
+orange "missing content" warning.
+
 A detailed list of everything found is written to
 `ModsData/CrashRepair/missing_prefabs_report.csv` and `Logs/CrashRepair.log`.
 
@@ -43,6 +47,12 @@ building sub-areas, notification icons) are cleaned up by the same vanilla syste
 handle bulldozing. Runtime entities whose references the game repairs through other
 channels (`NetCompositionData`, `EffectInstance`, `LivePath`) are excluded from the
 scan, mirroring the game's own `PrimaryPrefabReferencesSystem`.
+
+The orange warning in the load menu comes from a different place: `CityConfigurationSystem`
+keeps a `usedMods` set that is loaded from the save and then extended with the currently
+active mods — it is never pruned. Entries are assembly full names including the version,
+so every mod update leaves an outdated entry behind and a removed mod stays listed forever.
+The repair drops every entry that no loaded mod matches; the next save writes the clean list.
 
 ## Removal
 

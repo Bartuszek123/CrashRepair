@@ -4,7 +4,7 @@
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Crash Repair" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="Does your city crash since you removed some mods or assets? This mod repairs such corrupted saves — it deletes the broken leftovers of missing content, so your city runs stable again." />
+	<ShortDescription Value="Does your city crash or show the &quot;missing mods&quot; warning since you removed mods or assets? This mod cleans the broken leftovers of missing content, so your save loads clean and runs stable." />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<LongDescription>
 # Does your city crash ever since you made some changes to your playset?
@@ -33,6 +33,7 @@ In the options there is also a **"Repair automatically on load"** toggle. (It's 
 
 - **Removal of objects is permanent in the repaired save.** If you re-subscribe to the removed mod later, the deleted objects will NOT come back (the repaired save no longer contains them). If you plan on adding a mod back, keep the original save!
 - This mod will **not** fix saves that are already corrupted and crash on load. It only works for saves that load normally and crash later.
+- The save also remembers every mod (and every version of it!) that was ever active in it (the game only ever adds to that list, never removes). That's why the load menu keeps showing the orange warning for a mod you removed ages ago, even if it never placed anything. The repair cleans that list too, so after you save, the warning is gone. And don't be scared by the number! an old city easily has 100+ stale entries because most of them just old versions of mods you still use.
 - Your savegame file on disk is **never** touched. The repair happens in the loaded city and only becomes permanent when you save.
 - A detailed list of everything found (which missing asset, how many objects) is in `ModsData/CrashRepair/missing_prefabs_report.csv` and `Logs/CrashRepair.log`.
 
@@ -49,15 +50,16 @@ The game keeps an empty placeholder for every missing asset a save references (m
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.0.0" />
+	<ModVersion Value="1.1.0" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.6.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
-v1.0.0
-Initial release.
+v1.1.0
+- Repair now also cleans the list of mods stored in your save (missing mods and old versions of mods — the game never removes those), so the load menu stops showing the orange "missing content" warning.
+- The scan result shows how many such stale entries your save has.
 	</ChangeLog>
 	<!--External link, can be set multiple times. supported types are "discord", "github", "youtube", "twitch", "x", "paypal", "patreon", "buymeacoffee", "kofi", "crowdin", "gitlab", "gofundme"-->
 	<ExternalLink Type="kofi" Url="https://ko-fi.com/bartuszek" />
