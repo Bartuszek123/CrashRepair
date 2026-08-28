@@ -23,12 +23,34 @@ That's it. My city that kept crashing within an hour ran for hours afterwards wi
 There is also a **"Repair automatically on load"** toggle (off by default). With it on,
 you can safely remove mods and assets without worrying about your save getting corrupted.
 
-The repair also cleans the list of mods stored in the save — missing mods and old versions
-of mods you still have (the game never removes those) — so the load menu stops showing the
-orange "missing content" warning.
+The repair also tidies the save's internal list of used mods (the game only ever adds to
+it). That is housekeeping (it has no visible effect).
 
-A detailed list of everything found is written to
-`ModsData/CrashRepair/missing_prefabs_report.csv` and `Logs/CrashRepair.log`.
+## If the load menu still asks you to subscribe to a removed asset pack
+
+Deleting the placed objects is usually enough. The normal repair also clears the leftovers
+that would keep spawning broken objects: a vehicle model chosen for a transit line (the
+line uses random vehicles of its type again, as when none is chosen), trees painted on a road (the road gets its default
+street trees back), and the map's list of required content.
+
+When the warning still stays, something else points at the missing content: a company
+brand, a pending building upgrade, a policy, a service budget or a chirp. Turn on
+**"Advanced cleanup"** in the options and press "Repair now" again (each is handled the
+way the game itself would). It is off by default (when on, the automatic repair includes it too); leave it
+off unless you need it.
+
+A pack that is merely disabled in your playset leaves exactly the same traces as a removed
+one; the scan result says so when it detects that. Enable the pack instead if you want to
+keep its content. When a missing asset belongs to a pack that is still enabled, the pack
+author removed or renamed it: the objects are repaired the same way, but the pack stays in
+the save's requirements (it is installed, so the load menu does not complain).
+
+The scan result tells you when a missing asset is held by data the mod does not handle
+(for example another mod's own components); in that case the warning cannot be removed
+by this mod.
+
+A detailed list of everything found is written to `ModsData/CrashRepair/`
+(`missing_prefabs_report.csv`, `secondary_references_report.csv`) and `Logs/CrashRepair.log`.
 
 ## How it works
 
@@ -48,11 +70,21 @@ handle bulldozing. Runtime entities whose references the game repairs through ot
 channels (`NetCompositionData`, `EffectInstance`, `LivePath`) are excluded from the
 scan, mirroring the game's own `PrimaryPrefabReferencesSystem`.
 
-The orange warning in the load menu comes from a different place: `CityConfigurationSystem`
-keeps a `usedMods` set that is loaded from the save and then extended with the currently
-active mods — it is never pruned. Entries are assembly full names including the version,
-so every mod update leaves an outdated entry behind and a removed mod stays listed forever.
-The repair drops every entry that no loaded mod matches; the next save writes the clean list.
+The "missing content / subscribe" warning in the load menu is driven by
+`contentPrerequisites` in the save's metadata. The game computes it on every save: a
+`ContentPrefab` ("Mod:<id>") is listed when any prefab referenced by the save carries
+`ModPrerequisiteData` pointing at it, and a missing prefab's placeholder keeps that link.
+So the warning stays as long as *anything* references the placeholder. Besides `PrefabRef`
+on placed objects, the game's `PrimaryPrefabReferencesSystem` follows
+`CityConfigurationSystem.requiredContent` (the map's requirements list), `VehicleModel`
+buffers on routes, `CompanyData.m_Brand`, `UnderConstruction.m_NewPrefab`, `Policy`,
+`ServiceBudgetData`, chirps and `SubReplacement` (street trees). The advanced cleanup
+walks exactly that list and repairs each reference the way the corresponding vanilla
+player action does. Placeholders that neither scan reaches are reported as "held by data
+this mod does not handle".
+
+The `usedMods` list (`SaveInfo.modsEnabled`) is separate: the UI only uses it as a flag
+for the achievements notice. Tidying it is housekeeping.
 
 ## Removal
 

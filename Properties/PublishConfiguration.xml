@@ -33,9 +33,17 @@ In the options there is also a **"Repair automatically on load"** toggle. (It's 
 
 - **Removal of objects is permanent in the repaired save.** If you re-subscribe to the removed mod later, the deleted objects will NOT come back (the repaired save no longer contains them). If you plan on adding a mod back, keep the original save!
 - This mod will **not** fix saves that are already corrupted and crash on load. It only works for saves that load normally and crash later.
-- The save also remembers every mod (and every version of it!) that was ever active in it (the game only ever adds to that list, never removes). That's why the load menu keeps showing the orange warning for a mod you removed ages ago, even if it never placed anything. The repair cleans that list too, so after you save, the warning is gone. And don't be scared by the number! an old city easily has 100+ stale entries because most of them just old versions of mods you still use.
+- The repair also tidies the save's internal list of mods that were ever used in it (the game only ever adds to that list). Don't be scared by the number, an old city easily has 100+ stale entries because most of them are just old versions of mods you still use. This is housekeeping, it doesn't change anything visible.
 - Your savegame file on disk is **never** touched. The repair happens in the loaded city and only becomes permanent when you save.
-- A detailed list of everything found (which missing asset, how many objects) is in `ModsData/CrashRepair/missing_prefabs_report.csv` and `Logs/CrashRepair.log`.
+- A detailed list of everything found (which missing asset, how many objects) is in `ModsData/CrashRepair/` and `Logs/CrashRepair.log`.
+
+# Load menu still asks you to subscribe to a removed asset pack?
+
+Deleting the placed objects is usually enough. The normal repair also takes care of the leftovers that would keep spawning broken objects: a vehicle model you picked for a transit line (the line uses random vehicles of its type again, as when none is chosen), trees you painted on a road (the road gets its default street trees back), and the map's list of required content. The scan result in the options tells you what it found.
+
+Sometimes something else still points at the missing content: a company brand, a pending building upgrade, a policy, a service budget, a chirp. For those there is the **"Advanced cleanup"** toggle (off by default). Turn it on and press **"Repair now"** again, it fixes each of them the way the game itself would. When it is on, the automatic repair includes it too. It touches more than placed objects, so leave it off unless you need it. If the scan says a missing asset is held by data this mod doesn't handle (for example another mod's own data), the warning can't be removed by this mod.
+
+Two more things the scan tells you. If a "missing" pack is only **disabled in your playset** (still subscribed), it leaves exactly the same traces as a removed one — the scan result says so; enable the pack instead of repairing if you want to keep its content. And if a missing asset belongs to a pack you still have **enabled**, the pack author removed or renamed it — the objects are just as broken and get repaired the same way, but there is nothing to subscribe to and the pack stays in the save's requirements (it is installed, so the load menu doesn't complain).
 
 # How it works
 
@@ -50,16 +58,23 @@ The game keeps an empty placeholder for every missing asset a save references (m
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.1.0" />
+	<ModVersion Value="1.2.0" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.6.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<ChangeLog>
-v1.1.0
-- Repair now also cleans the list of mods stored in your save (missing mods and old versions of mods — the game never removes those), so the load menu stops showing the orange "missing content" warning.
-- The scan result shows how many such stale entries your save has.
+v1.2.0
+- The repair now also clears the leftovers that keep spawning broken objects and keep the load menu asking for a removed pack: vehicle models chosen for transit lines, trees painted on roads, and the map's list of required content.
+- New "Advanced cleanup" option (off by default; applies to "Repair now" and, when on, to the automatic repair) for the remaining data that can point at missing content: company brands, pending building upgrades, policies, service budgets and chirps. Each is handled the way the game itself would.
+- The scan now reports all of those, tells you when a missing asset is held by data the mod doesn't handle, when a "missing" pack is merely disabled in your playset, and when a missing asset was dropped from a pack you still have enabled.
+- The scan result in the options is shown one finding per line, and the log lists every repaired road, junction, building and vehicle.
+- Junctions switched to another road type get that type's node tags, and buildings that fronted a deleted road are registered with it so the game finds them a new road.
+- Deleting a transit line with a missing prefab now also deletes its waypoints and segments, like the game's own bulldoze does.
+- Roads of a missing road type are now removed the way the bulldozer does it: junctions that other roads still use are kept and switched to a remaining road type instead of being destroyed (that crashed the game).
+- The repair now runs through the same frame path as bulldozing, so the game's own cleanup of lots, driveways and owned vehicles applies. The automatic repair scans at load and runs a moment later, once the city is fully set up.
+- Wording fix: the mod-list tidy-up from v1.1.0 is housekeeping, it doesn't affect the load menu warning.
 	</ChangeLog>
 	<!--External link, can be set multiple times. supported types are "discord", "github", "youtube", "twitch", "x", "paypal", "patreon", "buymeacoffee", "kofi", "crowdin", "gitlab", "gofundme"-->
 	<ExternalLink Type="kofi" Url="https://ko-fi.com/bartuszek" />

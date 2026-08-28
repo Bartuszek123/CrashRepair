@@ -64,4 +64,10 @@
 		<None Include="$(ModTargetsFile)" Link="Properties\Mod.targets" />
 	</ItemGroup>
 
+	<!--Research material (decompiled game sources, review kit) is not part of the mod-->
+	<ItemGroup>
+		<Compile Remove="_research\**" />
+		<None Remove="_research\**" />
+	</ItemGroup>
+
 </Project>

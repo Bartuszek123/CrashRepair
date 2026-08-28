@@ -12,8 +12,8 @@ namespace CrashRepair
 
         public static Setting settings { get; private set; }
 
-        /// <summary>Human-readable result of the most recent scan, shown in the options UI.</summary>
-        public static string lastScanResult { get; internal set; } = string.Empty;
+        /// <summary>Human-readable result of the most recent scan, one line per finding, shown in the options UI.</summary>
+        public static string[] lastScanLines { get; internal set; } = new string[0];
 
         public void OnLoad(UpdateSystem updateSystem)
         {
@@ -24,11 +24,14 @@ namespace CrashRepair
             GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(settings));
             AssetDatabase.global.LoadSettings(nameof(CrashRepair), settings, new Setting(this));
 
-            // Deserialize-phase mod systems run after all vanilla systems of
-            // that phase, so prefab references are already resolved when the
-            // scan sees them.
-            updateSystem.UpdateAt<AutoRepairSystem>(SystemUpdatePhase.Deserialize);
-            updateSystem.UpdateAt<ManualRepairSystem>(SystemUpdatePhase.Modification1);
+            // UpdateAfter puts the system in the phase's back band (index + 1000000),
+            // behind every vanilla UpdateAfter registration (the DeserializationBarrier
+            // and all PostDeserialize wrappers), so the scan sees the fully loaded
+            // world. UpdateAt would land it in the middle band, before those.
+            updateSystem.UpdateAfter<AutoRepairSystem>(SystemUpdatePhase.Deserialize);
+            // PreTool runs inside ToolSystem before PostTool (SubElementDeleteSystem)
+            // and the Modification phases: the same frame path a bulldozed object takes.
+            updateSystem.UpdateAt<ManualRepairSystem>(SystemUpdatePhase.PreTool);
         }
 
         public void OnDispose()
@@ -36,6 +39,7 @@ namespace CrashRepair
             log.Info(nameof(OnDispose));
             settings?.UnregisterInOptionsUI();
             settings = null;
+            lastScanLines = new string[0];
         }
     }
 }

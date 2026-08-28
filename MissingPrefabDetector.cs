@@ -12,9 +12,15 @@ namespace CrashRepair
     /// </summary>
     internal static class MissingPrefabDetector
     {
+        /// <summary>True for a live entity that carries prefab data (real or placeholder).</summary>
+        public static bool IsPrefabEntity(EntityManager entityManager, Entity entity)
+        {
+            return entity != Entity.Null && entityManager.HasComponent<PrefabData>(entity);
+        }
+
         public static bool IsMissing(EntityManager entityManager, PrefabSystem prefabSystem, Entity prefab)
         {
-            if (prefab == Entity.Null || !entityManager.HasComponent<PrefabData>(prefab))
+            if (!IsPrefabEntity(entityManager, prefab))
                 return true;
             if (entityManager.IsComponentEnabled<PrefabData>(prefab))
                 return false;
